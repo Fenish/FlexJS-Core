@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import * as http from 'http';
+import * as zlib from 'zlib';
 
 import { PyroRequest, PyroResponse, Middleware } from '@/types';
 import { IRoute } from '@/interfaces/IRoute';
@@ -99,10 +100,25 @@ export class PyroServer {
 					} else {
 						const data = await route.handler(req, res);
 
-						res.writeHead(route.status, {
-							'Content-Type': 'application/json',
-						});
-						res.end(JSON.stringify(data));
+						const acceptEncoding =
+							req.headers['accept-encoding'] || '';
+
+						const responseData = JSON.stringify(data);
+						const shouldCompress = responseData.length > 1024;
+
+						if (acceptEncoding.includes('gzip') && shouldCompress) {
+							res.writeHead(route.status, {
+								'Content-Encoding': 'gzip',
+								'Content-Type': 'application/json',
+							});
+							const compressedData = zlib.gzipSync(responseData);
+							res.end(compressedData);
+						} else {
+							res.writeHead(route.status, {
+								'Content-Type': 'application/json',
+							});
+							res.end(JSON.stringify(data));
+						}
 					}
 				};
 				await runMiddleware();
