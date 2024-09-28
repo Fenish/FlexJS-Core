@@ -3,6 +3,28 @@ import { PyroServer } from '../core/pyro';
 import { IServerConfig } from '@/interfaces/IServerConfig';
 import { LogLevel } from '@/enums/loglevel';
 
+function printToConsole(type: string, message: string) {
+	let prefixColor = chalk.green;
+	let messageColor = chalk.gray;
+
+	if (type === 'INFO') {
+		prefixColor = chalk.blueBright;
+	} else if (type === 'WARN') {
+		prefixColor = chalk.yellow;
+	} else if (type === 'ERROR') {
+		prefixColor = chalk.red;
+	} else if (type === 'DEBUG') {
+		prefixColor = chalk.magenta;
+		messageColor = chalk.greenBright;
+	}
+
+	const time = chalk.gray(`[${new Date().toLocaleString()}]`);
+
+	const prefix = prefixColor(`[${type}]`);
+	const msg = messageColor(message);
+	console.log(`${time} ${prefix} ${msg}`);
+}
+
 export class Logger {
 	private static instance: Logger | null = null; // Static instance
 	private loggerConfig: IServerConfig['logger'] | undefined;
@@ -41,38 +63,67 @@ export class Logger {
 	}
 
 	public static error(message: string) {
-		const prefix = chalk.red('[ERROR]');
-		const msg = chalk.redBright(message);
-
 		if (this.instance?.checkLogLevel(this.instance, LogLevel.error)) {
-			console.error(`${prefix} ${msg}`);
+			printToConsole('ERROR', message);
 		}
 	}
 
 	public static warn(message: string) {
-		const prefix = chalk.yellow('[WARN]');
-		const msg = chalk.yellowBright(message);
-
 		if (this.instance?.checkLogLevel(this.instance, LogLevel.warn)) {
-			console.warn(`${prefix} ${msg}`);
+			printToConsole('WARN', message);
 		}
 	}
 
 	public static info(message: string) {
-		const prefix = chalk.blue('[INFO]');
-		const msg = chalk.gray(message);
-
 		if (this.instance?.checkLogLevel(this.instance, LogLevel.info)) {
-			console.log(`${prefix} ${msg}`);
+			printToConsole('INFO', message);
 		}
 	}
 
 	public static debug(message: string) {
-		const prefix = chalk.magenta('[DEBUG]');
-		const msg = chalk.greenBright(message);
-
 		if (this.instance?.checkLogLevel(this.instance, LogLevel.debug)) {
-			console.debug(`${prefix} ${msg}`);
+			printToConsole('DEBUG', message);
+		}
+	}
+
+	public static http(
+		method: string | undefined,
+		status: any,
+		path: string | undefined,
+		time_in_ms: number
+	) {
+		if (method === 'GET') {
+			method = chalk.bgCyanBright(' GET ');
+		}
+
+		if (method === 'POST') {
+			method = chalk.bgMagentaBright(' POST ');
+		}
+
+		if (method === 'PUT') {
+			method = chalk.bgYellowBright(' PUT ');
+		}
+
+		if (method === 'PATCH') {
+			method = chalk.bgBlueBright(' PATCH ');
+		}
+
+		if (method === 'DELETE') {
+			method = chalk.bgRedBright(' DELETE ');
+		}
+
+		if (status >= 200 && status < 300) {
+			status = chalk.bgGreenBright(` ${status} `);
+		} else if (status >= 400) {
+			status = chalk.bgRedBright(` ${status} `);
+		}
+		const eventTime = chalk.gray(`[${new Date().toLocaleString()}]`);
+
+		const time = chalk.yellowBright(`${time_in_ms}ms`);
+		const msg = `${eventTime} ${method} ${status} ${path} ${time}`;
+
+		if (this.instance?.checkLogLevel(this.instance, LogLevel.http)) {
+			console.log(msg);
 		}
 	}
 }

@@ -6,6 +6,7 @@ import { IRoute } from '@/interfaces/IRoute';
 import { IServerConfig } from '@/interfaces/IServerConfig';
 import { Logger } from '../utils/logger';
 import chalk from 'chalk';
+import { LogLevel } from '@/enums/loglevel';
 
 export class PyroServer {
 	private routes: IRoute[] = [];
@@ -64,6 +65,13 @@ export class PyroServer {
 	}
 
 	private async handleRequest(req: PyroRequest, res: PyroResponse) {
+		const start = Date.now();
+		if (req.url === '/favicon.ico') {
+			res.writeHead(204); // No Content
+			res.end();
+			return;
+		}
+
 		const url = new URL(req.url || '/', `http://${req.headers.host}`);
 		const route = this.routes.find(
 			(r) => r.method === req.method && r.path === url.pathname
@@ -71,46 +79,52 @@ export class PyroServer {
 
 		if (!route) {
 			res.writeHead(404, { 'Content-Type': 'application/json' });
-			return res.end(JSON.stringify({ error: 'Route not found' }));
+			res.end(JSON.stringify({ error: 'Route not found' }));
 		}
 
-		try {
-			const middlewares = [
-				...this.globalMiddlewares,
-				...route.middlewares,
-			];
-			let index = 0;
+		if (route) {
+			try {
+				const middlewares = [
+					...this.globalMiddlewares,
+					...route.middlewares,
+				];
+				let index = 0;
 
-			const runMiddleware = async () => {
-				if (index < middlewares.length) {
-					await middlewares[index](req, res, async () => {
-						index++;
-						await runMiddleware();
-					});
-				} else {
-					const data = await route.handler(req, res);
-					res.writeHead(route.status, {
-						'Content-Type': 'application/json',
-					});
-					res.end(JSON.stringify(data));
-				}
-			};
-			await runMiddleware();
-		} catch (error) {
-			res.writeHead(500, { 'Content-Type': 'application/json' });
-			res.end(
-				JSON.stringify({
-					message: 'Internal Server Error',
-					error: error,
-				})
-			);
+				const runMiddleware = async () => {
+					if (index < middlewares.length) {
+						await middlewares[index](req, res, async () => {
+							index++;
+							await runMiddleware();
+						});
+					} else {
+						const data = await route.handler(req, res);
+
+						res.writeHead(route.status, {
+							'Content-Type': 'application/json',
+						});
+						res.end(JSON.stringify(data));
+					}
+				};
+				await runMiddleware();
+			} catch (error) {
+				res.writeHead(500, { 'Content-Type': 'application/json' });
+				res.end(
+					JSON.stringify({
+						message: 'Internal Server Error',
+						error: error,
+					})
+				);
+			}
 		}
+
+		const responseTime = Date.now() - start;
+		Logger.http(req.method, res.statusCode, req.url, responseTime);
 	}
 
 	listen(port: number): http.Server {
 		this.registerControllers();
 		return this.server.listen(port, () => {
-			getStartupMessage(port, this.routes);
+			getStartupMessage(port, this.routes, this.config?.logger?.level);
 		});
 	}
 }
@@ -120,9 +134,14 @@ function infoMsg(msg: string) {
 	console.log(`${prefix} ${msg}`);
 }
 
-function getStartupMessage(port: number, routes: any) {
+function getStartupMessage(
+	port: number,
+	routes: any,
+	logLevel: LogLevel | undefined
+) {
 	console.log(chalk.hex('#FFA500')('🔥 PyroJS'));
 	infoMsg(`Server running on port: ${chalk.green(port)}`);
 	infoMsg('Registered routes: ' + chalk.green(routes.length));
-	infoMsg(`Press ${chalk.red('CTRL+C')} to stop server`);
+	infoMsg('Logging level: ' + chalk.green(logLevel || 'info'));
+	infoMsg(`Press ${chalk.red('CTRL+C')} to stop server\n`);
 }
