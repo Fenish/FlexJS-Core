@@ -1,5 +1,5 @@
 // HTTP
-export * from './Http/controller.decorator';
-export * from './Http/middleware.decorator';
-export * from './Http/methods.decorator';
-export * from './Http/responsestatus.decorator';
+export * from './http/controller.decorator';
+export * from './http/middleware.decorator';
+export * from './http/methods.decorator';
+export * from './http/responsestatus.decorator';
