@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { PyroServer } from './pyro';
+import { PyroServer } from '../core/pyro';
 import { IServerConfig } from '@/interfaces/IServerConfig';
 import { LogLevel } from '@/enums/loglevel';
 

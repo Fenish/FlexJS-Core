@@ -4,7 +4,7 @@ import * as http from 'http';
 import { PyroRequest, PyroResponse, Middleware } from '@/types';
 import { IRoute } from '@/interfaces/IRoute';
 import { IServerConfig } from '@/interfaces/IServerConfig';
-import { Logger } from './logger';
+import { Logger } from '../utils/logger';
 import chalk from 'chalk';
 
 export class PyroServer {
