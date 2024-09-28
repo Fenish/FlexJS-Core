@@ -1,27 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",                          // Specify ECMAScript target version.
-    "module": "commonjs",                         // Specify module code generation.
-    "lib": ["ES2020", "DOM"],                     // Specify library files to include.
-    "allowJs": true,                              // Allow JavaScript files to be compiled.
-    "skipLibCheck": true,                         // Skip type checking of declaration files.
-    "strict": true,                               // Enable strict type-checking options.
-    "esModuleInterop": true,                      // Enable compatibility with CommonJS modules.
-    "experimentalDecorators": true,               // Enable experimental support for decorators.
-    "emitDecoratorMetadata": true,                // Emit metadata for decorated elements.
-    "forceConsistentCasingInFileNames": true,     // Ensure file names are treated with consistent casing.
-    "moduleResolution": "node",                   // Use Node.js style module resolution.
-    "resolveJsonModule": true,                    // Include `.json` files.
-    "outDir": "./dist",                           // Redirect output to a directory.
-    "rootDir": "./src",                           // Specify the root directory of input files.
-    "noEmitOnError": true,                        // Disable emitting files on compilation errors.
-    "strictPropertyInitialization": false,        // Relax property initialization checks.
-    "typeRoots": ["./node_modules/@types"],       // Include type definitions.
-    "baseUrl": ".",                               // Base directory for non-relative imports.
-    "paths": {                                    // Define module resolution paths.
-      "@/*": ["src/*"]
-    }
-  },
-  "include": ["src"],                             // Include all TypeScript files in `src` directory.
-  "exclude": ["node_modules", "dist"]             // Exclude unnecessary directories.
+    "compilerOptions": {
+        "target": "ES2021", // or your desired target
+        "module": "ESNext", // or another module format
+        "baseUrl": "./src", // Set the base URL to the 'src' directory
+        "paths": {
+            "@/*": ["*"] // Maps '@' to the 'src' directory
+        },
+        "moduleResolution": "Node",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "allowJs": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist", "test"]
 }
