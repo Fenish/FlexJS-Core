@@ -1,4 +1,5 @@
-import { Controller, ResponseStatus, Get } from '../../src/decorators';
+import { Controller, Get, UseMiddleware } from '../../src/decorators';
+import { TestMiddleware } from '../middlewares/test';
 
 @Controller('/auth')
 export class AuthenticationController {
@@ -10,10 +11,9 @@ export class AuthenticationController {
 	}
 
 	@Get('/register')
-	@ResponseStatus(201)
-	register() {
-		return {
-			message: 'register',
-		};
+	// @ResponseStatus(201)
+	@UseMiddleware(TestMiddleware)
+	register(body: any) {
+		return { message: 'test' };
 	}
 }

@@ -1,13 +1,22 @@
-import 'reflect-metadata';
 import * as http from 'http';
+import 'reflect-metadata';
 import * as zlib from 'zlib';
 
-import { PyroRequest, PyroResponse, Middleware } from '@/types';
+import {
+	CONTROLLER_NAME_KEY,
+	METHOD_KEY,
+	MIDDLEWARE_KEY,
+	ROUTE_HANDLER,
+	ROUTE_PATH_KEY,
+	ROUTES_KEY,
+	STATUS_KEY,
+} from '@/decorators/symbols';
+import { LogLevel } from '@/enums/loglevel';
 import { IRoute } from '@/interfaces/IRoute';
 import { IServerConfig } from '@/interfaces/IServerConfig';
-import { Logger } from '../utils/logger';
+import { Middleware, PyroRequest, PyroResponse } from '@/types';
 import chalk from 'chalk';
-import { LogLevel } from '@/enums/loglevel';
+import { Logger } from '../utils/logger';
 
 export class PyroServer {
 	private routes: IRoute[] = [];
@@ -44,24 +53,26 @@ export class PyroServer {
 			this.registerController(controller);
 			Logger.info(`Registered controller: ${controller.name}`);
 		}
-		Logger.debug(`Registered routes: ${JSON.stringify(this.routes)}`);
 	}
 
 	private registerController(controller: new () => any) {
 		const controllerData =
 			Reflect.getMetadata('controller_data', controller) || '';
 
-		const controllerName = controllerData.path;
-		const routes: any = controllerData.routes;
+		const controllerName = controllerData[CONTROLLER_NAME_KEY];
+		const routes: any = controllerData[ROUTES_KEY];
 		Logger.debug(`Controller: ${controllerName}`);
-		Logger.debug(`Routes: ${JSON.stringify(routes)}`);
 
+		const controllerMiddlewares = controllerData[MIDDLEWARE_KEY] || [];
 		for (const route of routes) {
-			const fullPath = `${controllerName}${route.path}`;
+			const fullPath = `${controllerName}${route[ROUTE_PATH_KEY]}`;
+			const middlewares = route[MIDDLEWARE_KEY] || [];
 			this.routes.push({
 				...route,
-				path: fullPath,
+				[ROUTE_PATH_KEY]: fullPath,
+				[MIDDLEWARE_KEY]: [...middlewares, ...controllerMiddlewares],
 			});
+			Logger.debug(`Route: ${fullPath} (${route[METHOD_KEY]})`);
 		}
 	}
 
@@ -74,8 +85,10 @@ export class PyroServer {
 		}
 
 		const url = new URL(req.url || '/', `http://${req.headers.host}`);
-		const route = this.routes.find(
-			(r) => r.method === req.method && r.path === url.pathname
+		const route: any = this.routes.find(
+			(r: any) =>
+				r[METHOD_KEY] === req.method &&
+				r[ROUTE_PATH_KEY] === url.pathname
 		);
 
 		if (!route) {
@@ -84,21 +97,30 @@ export class PyroServer {
 		}
 
 		if (route) {
+			Logger.debug(
+				`Route found: ${route[ROUTE_PATH_KEY]} (${route[METHOD_KEY]})`
+			);
 			try {
 				const middlewares = [
 					...this.globalMiddlewares,
-					...route.middlewares,
+					...route[MIDDLEWARE_KEY],
 				];
 				let index = 0;
 
 				const runMiddleware = async () => {
 					if (index < middlewares.length) {
-						await middlewares[index](req, res, async () => {
+						Logger.debug(
+							`Running middleware: ${middlewares[index].name}`
+						);
+						middlewares[index](req, res, async () => {
 							index++;
 							await runMiddleware();
 						});
 					} else {
-						const data = await route.handler(req, res);
+						Logger.debug(
+							`Running handler: ${route[ROUTE_HANDLER].name}`
+						);
+						const data = await route[ROUTE_HANDLER](req, res);
 
 						const acceptEncoding =
 							req.headers['accept-encoding'] || '';
@@ -107,22 +129,30 @@ export class PyroServer {
 						const shouldCompress = responseData.length > 1024;
 
 						if (acceptEncoding.includes('gzip') && shouldCompress) {
-							res.writeHead(route.status, {
+							Logger.debug('Compressed with GZIP');
+							res.writeHead(route[STATUS_KEY], {
 								'Content-Encoding': 'gzip',
 								'Content-Type': 'application/json',
 							});
 							const compressedData = zlib.gzipSync(responseData);
+							Logger.debug(
+								`Compressed data: ${compressedData.length} bytes`
+							);
 							res.end(compressedData);
 						} else {
-							res.writeHead(route.status, {
+							res.writeHead(route[STATUS_KEY], {
 								'Content-Type': 'application/json',
 							});
+							Logger.debug(
+								`Returned Data: ${responseData.length} bytes`
+							);
 							res.end(JSON.stringify(data));
 						}
 					}
 				};
 				await runMiddleware();
 			} catch (error) {
+				console.log(error);
 				res.writeHead(500, { 'Content-Type': 'application/json' });
 				res.end(
 					JSON.stringify({

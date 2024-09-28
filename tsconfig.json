@@ -1,17 +1,24 @@
 {
-    "compilerOptions": {
-        "target": "ES2021", // or your desired target
-        "module": "ESNext", // or another module format
-        "baseUrl": "./src", // Set the base URL to the 'src' directory
-        "paths": {
-            "@/*": ["*"] // Maps '@' to the 'src' directory
-        },
-        "moduleResolution": "Node",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "allowJs": true
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "test"]
+	"compilerOptions": {
+		"target": "ES5",
+		"module": "ESNext",
+		"baseUrl": "./src",
+		"paths": {
+			"@/*": ["*"]
+		},
+		"moduleResolution": "Node",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"allowJs": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"lib": ["es2018", "esnext.asynciterable"],
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": [
+		"src/**/*",
+		"test/**/*" // Include all files in the test folder
+	],
+	"exclude": ["node_modules", "dist"]
 }

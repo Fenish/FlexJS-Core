@@ -1,46 +1,50 @@
 import 'reflect-metadata';
+import {
+	CONTROLLER_NAME_KEY,
+	MIDDLEWARE_KEY,
+	ROUTE_HANDLER,
+	ROUTES_KEY,
+} from '../symbols';
 
 export function Controller(path: string) {
-	return function (constructor: new (...args: any[]) => any) {
+	return function (target: any) {
 		path = path.startsWith('/') ? path : '/' + path;
-		const methodNames = Object.getOwnPropertyNames(
-			constructor.prototype
-		).filter((name) => name !== 'constructor'); // Exclude the constructor
-		const ownMetaData = Reflect.getOwnMetadataKeys(constructor);
-
-		const routes = [];
-		for (const methodName of methodNames) {
-			const method = constructor.prototype[methodName];
-			const metaDataKeys = Reflect.getOwnMetadataKeys(method, methodName);
-
-			const metaValues: any = {};
-			for (const key of metaDataKeys) {
-				const metaData = Reflect.getMetadata(key, method, methodName);
-				metaValues[key] = metaData;
-			}
-
-			routes.push({
-				method: metaValues.method,
-				path: path + metaValues.path,
-				handler: method,
-				...metaValues,
-			});
-		}
-
-		const controllerMetaData: any = {
-			path,
-			routes,
+		const controllerData: any = {
+			[CONTROLLER_NAME_KEY]: path,
+			[ROUTES_KEY]: [],
+			[MIDDLEWARE_KEY]: [],
 		};
 
-		for (const key of ownMetaData) {
-			const metaData = Reflect.getMetadata(key, constructor);
-			controllerMetaData[key] = metaData;
+		const methods = Object.getOwnPropertyNames(target.prototype).filter(
+			(name) => name !== 'constructor'
+		);
+
+		for (const method of methods) {
+			const metaDataKeys = Reflect.getOwnMetadataKeys(
+				target.prototype[method],
+				method
+			);
+
+			const route_data: any = {};
+			for (const key of metaDataKeys) {
+				const metaData = Reflect.getMetadata(
+					key,
+					target.prototype[method],
+					method
+				);
+				route_data[key] = metaData;
+			}
+
+			route_data[ROUTE_HANDLER] = target.prototype[method];
+			controllerData[ROUTES_KEY].push(route_data);
 		}
 
-		Reflect.defineMetadata(
-			'controller_data',
-			controllerMetaData,
-			constructor
-		);
+		const classMetaDataKeys = Reflect.getOwnMetadataKeys(target);
+		for (const key of classMetaDataKeys) {
+			const metaData = Reflect.getMetadata(key, target);
+			controllerData[key] = metaData;
+		}
+
+		Reflect.defineMetadata('controller_data', controllerData, target);
 	};
 }

@@ -1,27 +1,56 @@
 import 'reflect-metadata';
+import {
+	METHOD_KEY,
+	MIDDLEWARE_KEY,
+	ROUTE_PATH_KEY,
+	STATUS_KEY,
+} from '../symbols';
 
 function createMethodDecorator(method: string) {
 	return function (path: string) {
-		return function (target: any, context: ClassMemberDecoratorContext) {
+		return function (
+			target: any,
+			propertyKey: string,
+			descriptor: PropertyDescriptor
+		) {
 			path = path.startsWith('/') ? path : '/' + path;
 			const existingMiddlewares =
-				Reflect.getMetadata('middlewares', target, context.name) || [];
-			const existingStatusCode =
-				Reflect.getMetadata('status', target, context.name) || 200;
+				Reflect.getMetadata(
+					MIDDLEWARE_KEY,
+					descriptor.value,
+					propertyKey
+				) || [];
 
-			Reflect.defineMetadata('method', method, target, context.name);
-			Reflect.defineMetadata('path', path, target, context.name);
+			const existingStatusCode =
+				Reflect.getMetadata(
+					STATUS_KEY,
+					descriptor.value,
+					propertyKey
+				) || 200;
+
 			Reflect.defineMetadata(
-				'middlewares',
-				[...existingMiddlewares],
-				target,
-				context.name
+				METHOD_KEY,
+				method,
+				descriptor.value,
+				propertyKey
 			);
 			Reflect.defineMetadata(
-				'status',
+				ROUTE_PATH_KEY,
+				path,
+				descriptor.value,
+				propertyKey
+			);
+			Reflect.defineMetadata(
+				MIDDLEWARE_KEY,
+				[...existingMiddlewares],
+				descriptor.value,
+				propertyKey
+			);
+			Reflect.defineMetadata(
+				STATUS_KEY,
 				existingStatusCode,
-				target,
-				context.name
+				descriptor.value,
+				propertyKey
 			);
 		};
 	};
