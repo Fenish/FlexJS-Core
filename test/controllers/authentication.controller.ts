@@ -1,7 +1,4 @@
-import { Controller, ResponseStatus } from '../../src/decorators';
-import { Get } from '../../src/decorators';
-
-
+import { Controller, ResponseStatus, Get } from '../../src/decorators';
 
 @Controller('/auth')
 export class AuthenticationController {

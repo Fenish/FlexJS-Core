@@ -1,5 +1,5 @@
-export function ResponseStatus(status: Number) {
-    return function (target: any, context: ClassMemberDecoratorContext) {
-        Reflect.defineMetadata('status', status, target, context.name);
-    }
+export function ResponseStatus(status: number) {
+	return function (target: any, context: ClassMemberDecoratorContext) {
+		Reflect.defineMetadata('status', status, target, context.name);
+	};
 }
