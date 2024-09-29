@@ -1,3 +1,4 @@
+import { HttpMethods } from '@/enums/http.enum';
 import 'reflect-metadata';
 import {
 	METHOD_SYMBOL,
@@ -56,8 +57,8 @@ function createMethodDecorator(method: string) {
 	};
 }
 
-export const Get = createMethodDecorator('GET');
-export const Post = createMethodDecorator('POST');
-export const Put = createMethodDecorator('PUT');
-export const Patch = createMethodDecorator('PATCH');
-export const Delete = createMethodDecorator('DELETE');
+export const Get = createMethodDecorator(HttpMethods.GET);
+export const Post = createMethodDecorator(HttpMethods.POST);
+export const Put = createMethodDecorator(HttpMethods.PUT);
+export const Patch = createMethodDecorator(HttpMethods.PATCH);
+export const Delete = createMethodDecorator(HttpMethods.DELETE);
