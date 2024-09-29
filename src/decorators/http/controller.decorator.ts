@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import {
 	CONTROLLER_NAME_SYMBOL,
 	MIDDLEWARE_SYMBOL,
-	ROUTE_HANDLER,
+	ROUTE_HANDLER_SYMBOL,
 	ROUTES_SYMBOL,
 } from '../symbols';
 
@@ -35,7 +35,7 @@ export function Controller(path: string) {
 				route_data[key] = metaData;
 			}
 
-			route_data[ROUTE_HANDLER] = target.prototype[method];
+			route_data[ROUTE_HANDLER_SYMBOL] = target.prototype[method];
 			controllerData[ROUTES_SYMBOL].push(route_data);
 		}
 
