@@ -1,4 +1,4 @@
-import { STATUS_SYMBOL } from '../symbols';
+import { STATUS_METADATA_KEY } from '../symbols';
 
 export function ResponseStatus(status: number) {
 	return function (
@@ -7,7 +7,7 @@ export function ResponseStatus(status: number) {
 		descriptor: PropertyDescriptor
 	) {
 		Reflect.defineMetadata(
-			STATUS_SYMBOL,
+			STATUS_METADATA_KEY,
 			status,
 			descriptor.value,
 			propertyKey

@@ -2,11 +2,11 @@ import * as http from 'http';
 import 'reflect-metadata';
 
 import {
-	CONTROLLER_NAME_SYMBOL,
-	METHOD_SYMBOL,
-	MIDDLEWARE_SYMBOL,
-	ROUTE_PATH_SYMBOL,
-	ROUTES_SYMBOL,
+	CONTROLLER_NAME_METADATA_KEY,
+	METHOD_METADATA_KEY,
+	MIDDLEWARE_METADATA_KEY,
+	ROUTE_PATH_METADATA_KEY,
+	ROUTES_METADATA_KEY,
 } from '@/decorators/symbols';
 import { LogLevel } from '@/enums/loglevel.enum';
 import {
@@ -63,20 +63,24 @@ export class PyroServer {
 		const controllerData =
 			Reflect.getMetadata('controller_data', controller) || '';
 
-		const controllerName = controllerData[CONTROLLER_NAME_SYMBOL];
-		const routes: any = controllerData[ROUTES_SYMBOL];
+		const controllerName = controllerData[CONTROLLER_NAME_METADATA_KEY];
+		const routes: any = controllerData[ROUTES_METADATA_KEY];
 		Logger.debug(`Controller: ${controllerName}`);
 
-		const controllerMiddlewares = controllerData[MIDDLEWARE_SYMBOL] || [];
+		const controllerMiddlewares =
+			controllerData[MIDDLEWARE_METADATA_KEY] || [];
 		for (const route of routes) {
-			const fullPath = `${controllerName}${route[ROUTE_PATH_SYMBOL]}`;
-			const middlewares = route[MIDDLEWARE_SYMBOL] || [];
+			const fullPath = `${controllerName}${route[ROUTE_PATH_METADATA_KEY]}`;
+			const middlewares = route[MIDDLEWARE_METADATA_KEY] || [];
 			this.routes.push({
 				...route,
-				[ROUTE_PATH_SYMBOL]: fullPath,
-				[MIDDLEWARE_SYMBOL]: [...middlewares, ...controllerMiddlewares],
+				[ROUTE_PATH_METADATA_KEY]: fullPath,
+				[MIDDLEWARE_METADATA_KEY]: [
+					...middlewares,
+					...controllerMiddlewares,
+				],
 			});
-			Logger.debug(`Route: ${fullPath} (${route[METHOD_SYMBOL]})`);
+			Logger.debug(`Route: ${fullPath} (${route[METHOD_METADATA_KEY]})`);
 		}
 	}
 

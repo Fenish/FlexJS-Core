@@ -1,6 +1,6 @@
 import { Middleware } from '@/types';
 import 'reflect-metadata';
-import { MIDDLEWARE_SYMBOL } from '../symbols';
+import { MIDDLEWARE_METADATA_KEY } from '../symbols';
 
 export function UseMiddleware(...middlewares: Middleware[]) {
 	return function (
@@ -10,13 +10,17 @@ export function UseMiddleware(...middlewares: Middleware[]) {
 	) {
 		if (propertyKey && descriptor) {
 			Reflect.defineMetadata(
-				MIDDLEWARE_SYMBOL,
+				MIDDLEWARE_METADATA_KEY,
 				middlewares,
 				descriptor.value,
 				propertyKey
 			);
 		} else {
-			Reflect.defineMetadata(MIDDLEWARE_SYMBOL, middlewares, target);
+			Reflect.defineMetadata(
+				MIDDLEWARE_METADATA_KEY,
+				middlewares,
+				target
+			);
 		}
 	};
 }

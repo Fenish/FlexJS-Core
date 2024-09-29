@@ -1,9 +1,9 @@
 import {
-	METHOD_SYMBOL,
-	MIDDLEWARE_SYMBOL,
-	ROUTE_HANDLER_SYMBOL,
-	ROUTE_PATH_SYMBOL,
-	STATUS_SYMBOL,
+	METHOD_METADATA_KEY,
+	MIDDLEWARE_METADATA_KEY,
+	ROUTE_HANDLER_METADATA_KEY,
+	ROUTE_PATH_METADATA_KEY,
+	STATUS_METADATA_KEY,
 } from '@/decorators/symbols';
 import { PyroRequest, PyroResponse } from '@/types';
 import * as zlib from 'zlib';
@@ -27,8 +27,8 @@ export function findRoute(routes: any[], req: PyroRequest): any {
 	const url = new URL(req.url || '/', `http://${req.headers.host}`);
 	return routes.find(
 		(r: any) =>
-			r[METHOD_SYMBOL] === req.method &&
-			r[ROUTE_PATH_SYMBOL] === url.pathname
+			r[METHOD_METADATA_KEY] === req.method &&
+			r[ROUTE_PATH_METADATA_KEY] === url.pathname
 	);
 }
 
@@ -46,11 +46,14 @@ export async function processRoute(
 	globalMiddlewares: any[]
 ) {
 	Logger.debug(
-		`Route found: ${route[ROUTE_PATH_SYMBOL]} (${route[METHOD_SYMBOL]})`
+		`Route found: ${route[ROUTE_PATH_METADATA_KEY]} (${route[METHOD_METADATA_KEY]})`
 	);
 
 	try {
-		const middlewares = [...globalMiddlewares, ...route[MIDDLEWARE_SYMBOL]];
+		const middlewares = [
+			...globalMiddlewares,
+			...route[MIDDLEWARE_METADATA_KEY],
+		];
 		let index = 0;
 
 		const runMiddleware = async () => {
@@ -81,8 +84,8 @@ async function handleRouteHandler(
 	res: PyroResponse,
 	route: any
 ) {
-	Logger.debug(`Running handler: ${route[ROUTE_HANDLER_SYMBOL].name}`);
-	const data = await route[ROUTE_HANDLER_SYMBOL]();
+	Logger.debug(`Running handler: ${route[ROUTE_HANDLER_METADATA_KEY].name}`);
+	const data = await route[ROUTE_HANDLER_METADATA_KEY]();
 
 	const acceptEncoding = req.headers['accept-encoding'] || '';
 	const responseData = JSON.stringify(data);
@@ -101,7 +104,7 @@ function sendCompressedResponse(
 	responseData: string
 ) {
 	Logger.debug('Compressed with GZIP');
-	res.writeHead(route[STATUS_SYMBOL], {
+	res.writeHead(route[STATUS_METADATA_KEY], {
 		'Content-Encoding': 'gzip',
 		'Content-Type': 'application/json',
 	});
@@ -112,7 +115,7 @@ function sendCompressedResponse(
 }
 
 function sendJsonResponse(res: PyroResponse, route: any, responseData: string) {
-	res.writeHead(route[STATUS_SYMBOL], {
+	res.writeHead(route[STATUS_METADATA_KEY], {
 		'Content-Type': 'application/json',
 	});
 	Logger.debug(`Returned Data: ${responseData.length} bytes`);
