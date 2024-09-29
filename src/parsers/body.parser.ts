@@ -2,7 +2,7 @@ import { Middleware, NextFunction, PyroRequest, PyroResponse } from '@/types';
 
 export function bodyParser(): Middleware {
 	return (req: PyroRequest, res: PyroResponse, next: NextFunction) => {
-		if (req.method !== 'POST') return next();
+		if (req.method === 'GET') return next();
 		if (!req.headers['content-type']) return next();
 		if (!req.headers['content-type'].includes('application/json'))
 			return next();
