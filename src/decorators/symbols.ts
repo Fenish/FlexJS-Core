@@ -8,7 +8,7 @@ export const METHOD_SYMBOL = Symbol('method');
 export const ROUTE_PATH_SYMBOL = Symbol('path');
 export const MIDDLEWARE_SYMBOL = Symbol('middlewares');
 export const STATUS_SYMBOL = Symbol('status');
-export const ROUTE_HANDLER = Symbol('handler');
+export const ROUTE_HANDLER_SYMBOL = Symbol('handler');
 
 // PARAMETER
 
