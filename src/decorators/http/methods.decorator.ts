@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import {
-	METHOD_KEY,
-	MIDDLEWARE_KEY,
-	ROUTE_PATH_KEY,
-	STATUS_KEY,
+	METHOD_SYMBOL,
+	MIDDLEWARE_SYMBOL,
+	ROUTE_PATH_SYMBOL,
+	STATUS_SYMBOL,
 } from '../symbols';
 
 function createMethodDecorator(method: string) {
@@ -16,38 +16,38 @@ function createMethodDecorator(method: string) {
 			path = path.startsWith('/') ? path : '/' + path;
 			const existingMiddlewares =
 				Reflect.getMetadata(
-					MIDDLEWARE_KEY,
+					MIDDLEWARE_SYMBOL,
 					descriptor.value,
 					propertyKey
 				) || [];
 
 			const existingStatusCode =
 				Reflect.getMetadata(
-					STATUS_KEY,
+					STATUS_SYMBOL,
 					descriptor.value,
 					propertyKey
 				) || 200;
 
 			Reflect.defineMetadata(
-				METHOD_KEY,
+				METHOD_SYMBOL,
 				method,
 				descriptor.value,
 				propertyKey
 			);
 			Reflect.defineMetadata(
-				ROUTE_PATH_KEY,
+				ROUTE_PATH_SYMBOL,
 				path,
 				descriptor.value,
 				propertyKey
 			);
 			Reflect.defineMetadata(
-				MIDDLEWARE_KEY,
+				MIDDLEWARE_SYMBOL,
 				[...existingMiddlewares],
 				descriptor.value,
 				propertyKey
 			);
 			Reflect.defineMetadata(
-				STATUS_KEY,
+				STATUS_SYMBOL,
 				existingStatusCode,
 				descriptor.value,
 				propertyKey

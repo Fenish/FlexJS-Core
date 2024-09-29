@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 import {
-	CONTROLLER_NAME_KEY,
-	MIDDLEWARE_KEY,
+	CONTROLLER_NAME_SYMBOL,
+	MIDDLEWARE_SYMBOL,
 	ROUTE_HANDLER,
-	ROUTES_KEY,
+	ROUTES_SYMBOL,
 } from '../symbols';
 
 export function Controller(path: string) {
 	return function (target: any) {
 		path = path.startsWith('/') ? path : '/' + path;
 		const controllerData: any = {
-			[CONTROLLER_NAME_KEY]: path,
-			[ROUTES_KEY]: [],
-			[MIDDLEWARE_KEY]: [],
+			[CONTROLLER_NAME_SYMBOL]: path,
+			[ROUTES_SYMBOL]: [],
+			[MIDDLEWARE_SYMBOL]: [],
 		};
 
 		const methods = Object.getOwnPropertyNames(target.prototype).filter(
@@ -36,7 +36,7 @@ export function Controller(path: string) {
 			}
 
 			route_data[ROUTE_HANDLER] = target.prototype[method];
-			controllerData[ROUTES_KEY].push(route_data);
+			controllerData[ROUTES_SYMBOL].push(route_data);
 		}
 
 		const classMetaDataKeys = Reflect.getOwnMetadataKeys(target);

@@ -3,23 +3,22 @@ import 'reflect-metadata';
 import * as zlib from 'zlib';
 
 import {
-	CONTROLLER_NAME_KEY,
-	METHOD_KEY,
-	MIDDLEWARE_KEY,
+	CONTROLLER_NAME_SYMBOL,
+	METHOD_SYMBOL,
+	MIDDLEWARE_SYMBOL,
 	ROUTE_HANDLER,
-	ROUTE_PATH_KEY,
-	ROUTES_KEY,
-	STATUS_KEY,
+	ROUTE_PATH_SYMBOL,
+	ROUTES_SYMBOL,
+	STATUS_SYMBOL,
 } from '@/decorators/symbols';
-import { LogLevel } from '@/enums/loglevel';
-import { IRoute } from '@/interfaces/IRoute';
-import { IServerConfig } from '@/interfaces/IServerConfig';
+import { LogLevel } from '@/enums/loglevel.enum';
+import { IServerConfig } from '@/interfaces/server-config.interface';
 import { Middleware, PyroRequest, PyroResponse } from '@/types';
 import chalk from 'chalk';
 import { Logger } from '../utils/logger';
 
 export class PyroServer {
-	private routes: IRoute[] = [];
+	private routes: any = [];
 	private server: http.Server;
 	private controllers: any[] = [];
 	private globalMiddlewares: Middleware[] = [];
@@ -59,20 +58,20 @@ export class PyroServer {
 		const controllerData =
 			Reflect.getMetadata('controller_data', controller) || '';
 
-		const controllerName = controllerData[CONTROLLER_NAME_KEY];
-		const routes: any = controllerData[ROUTES_KEY];
+		const controllerName = controllerData[CONTROLLER_NAME_SYMBOL];
+		const routes: any = controllerData[ROUTES_SYMBOL];
 		Logger.debug(`Controller: ${controllerName}`);
 
-		const controllerMiddlewares = controllerData[MIDDLEWARE_KEY] || [];
+		const controllerMiddlewares = controllerData[MIDDLEWARE_SYMBOL] || [];
 		for (const route of routes) {
-			const fullPath = `${controllerName}${route[ROUTE_PATH_KEY]}`;
-			const middlewares = route[MIDDLEWARE_KEY] || [];
+			const fullPath = `${controllerName}${route[ROUTE_PATH_SYMBOL]}`;
+			const middlewares = route[MIDDLEWARE_SYMBOL] || [];
 			this.routes.push({
 				...route,
-				[ROUTE_PATH_KEY]: fullPath,
-				[MIDDLEWARE_KEY]: [...middlewares, ...controllerMiddlewares],
+				[ROUTE_PATH_SYMBOL]: fullPath,
+				[MIDDLEWARE_SYMBOL]: [...middlewares, ...controllerMiddlewares],
 			});
-			Logger.debug(`Route: ${fullPath} (${route[METHOD_KEY]})`);
+			Logger.debug(`Route: ${fullPath} (${route[METHOD_SYMBOL]})`);
 		}
 	}
 
@@ -87,8 +86,8 @@ export class PyroServer {
 		const url = new URL(req.url || '/', `http://${req.headers.host}`);
 		const route: any = this.routes.find(
 			(r: any) =>
-				r[METHOD_KEY] === req.method &&
-				r[ROUTE_PATH_KEY] === url.pathname
+				r[METHOD_SYMBOL] === req.method &&
+				r[ROUTE_PATH_SYMBOL] === url.pathname
 		);
 
 		if (!route) {
@@ -98,12 +97,12 @@ export class PyroServer {
 
 		if (route) {
 			Logger.debug(
-				`Route found: ${route[ROUTE_PATH_KEY]} (${route[METHOD_KEY]})`
+				`Route found: ${route[ROUTE_PATH_SYMBOL]} (${route[METHOD_SYMBOL]})`
 			);
 			try {
 				const middlewares = [
 					...this.globalMiddlewares,
-					...route[MIDDLEWARE_KEY],
+					...route[MIDDLEWARE_SYMBOL],
 				];
 				let index = 0;
 
@@ -120,7 +119,7 @@ export class PyroServer {
 						Logger.debug(
 							`Running handler: ${route[ROUTE_HANDLER].name}`
 						);
-						const data = await route[ROUTE_HANDLER](req, res);
+						const data = await route[ROUTE_HANDLER]();
 
 						const acceptEncoding =
 							req.headers['accept-encoding'] || '';
@@ -130,7 +129,7 @@ export class PyroServer {
 
 						if (acceptEncoding.includes('gzip') && shouldCompress) {
 							Logger.debug('Compressed with GZIP');
-							res.writeHead(route[STATUS_KEY], {
+							res.writeHead(route[STATUS_SYMBOL], {
 								'Content-Encoding': 'gzip',
 								'Content-Type': 'application/json',
 							});
@@ -140,7 +139,7 @@ export class PyroServer {
 							);
 							res.end(compressedData);
 						} else {
-							res.writeHead(route[STATUS_KEY], {
+							res.writeHead(route[STATUS_SYMBOL], {
 								'Content-Type': 'application/json',
 							});
 							Logger.debug(

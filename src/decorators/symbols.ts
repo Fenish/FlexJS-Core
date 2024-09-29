@@ -1,24 +1,24 @@
-export const CONTROLLER_KEY = Symbol('controller');
-export const CONTROLLER_NAME_KEY = Symbol('controller_name');
-export const ROUTES_KEY = Symbol('routes');
+export const CONTROLLER_SYMBOL = Symbol('controller');
+export const CONTROLLER_NAME_SYMBOL = Symbol('controller_name');
+export const ROUTES_SYMBOL = Symbol('routes');
 
 // HTTP
 
-export const METHOD_KEY = Symbol('method');
-export const ROUTE_PATH_KEY = Symbol('path');
-export const MIDDLEWARE_KEY = Symbol('middlewares');
-export const STATUS_KEY = Symbol('status');
+export const METHOD_SYMBOL = Symbol('method');
+export const ROUTE_PATH_SYMBOL = Symbol('path');
+export const MIDDLEWARE_SYMBOL = Symbol('middlewares');
+export const STATUS_SYMBOL = Symbol('status');
 export const ROUTE_HANDLER = Symbol('handler');
 
 // PARAMETER
 
-export const BODY_KEY = Symbol('body');
-export const PARAM_KEY = Symbol('param');
-export const QUERY_KEY = Symbol('query');
-export const HEADER_KEY = Symbol('header');
-export const COOKIES_KEY = Symbol('cookie');
-export const FILE_KEY = Symbol('file');
-export const FILES_KEY = Symbol('files');
-export const REQUEST_KEY = Symbol('request');
-export const RESPONSE_KEY = Symbol('response');
-export const NEXT_KEY = Symbol('next');
+export const BODY_SYMBOL = Symbol('body');
+export const PARAM_SYMBOL = Symbol('param');
+export const QUERY_SYMBOL = Symbol('query');
+export const HEADER_SYMBOL = Symbol('header');
+export const COOKIES_SYMBOL = Symbol('cookie');
+export const FILE_SYMBOL = Symbol('file');
+export const FILES_SYMBOL = Symbol('files');
+export const REQUEST_SYMBOL = Symbol('request');
+export const RESPONSE_SYMBOL = Symbol('response');
+export const NEXT_SYMBOL = Symbol('next');

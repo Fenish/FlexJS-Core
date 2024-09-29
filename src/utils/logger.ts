@@ -1,7 +1,7 @@
+import { LogLevel } from '@/enums/loglevel.enum';
+import { IServerConfig } from '@/interfaces/server-config.interface';
 import chalk from 'chalk';
 import { PyroServer } from '../core/pyro';
-import { IServerConfig } from '@/interfaces/IServerConfig';
-import { LogLevel } from '@/enums/loglevel';
 
 function printToConsole(type: string, message: string) {
 	let prefixColor = chalk.green;
