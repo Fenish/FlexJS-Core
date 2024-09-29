@@ -1,7 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-export type PyroRequest = IncomingMessage;
+export interface PyroRequest extends IncomingMessage {
+	body?: any;
+}
 export type PyroResponse = ServerResponse;
+export type NextFunction = () => void;
+
 export type RouteHandler = (
 	req: PyroRequest,
 	res: PyroResponse
