@@ -67,7 +67,6 @@ function createMethodDecorator(method: string) {
 					});
 				}
 			}
-			console.log(parameters);
 
 			Reflect.defineMetadata(
 				FUNCTION_PARAMETERS_METADATA_KEY,
