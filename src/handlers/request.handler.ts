@@ -7,7 +7,7 @@ import {
 } from '@/decorators/symbols';
 import { PyroRequest, PyroResponse } from '@/types';
 import * as zlib from 'zlib';
-import { Logger } from './logger';
+import { Logger } from '../utils/logger';
 
 // Function to handle favicon requests
 export function handleFaviconRequest(

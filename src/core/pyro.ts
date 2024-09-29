@@ -9,16 +9,16 @@ import {
 	ROUTES_SYMBOL,
 } from '@/decorators/symbols';
 import { LogLevel } from '@/enums/loglevel.enum';
-import { IRoute } from '@/interfaces/route.interface';
-import { IServerConfig } from '@/interfaces/server-config.interface';
-import { Middleware, PyroRequest, PyroResponse } from '@/types';
 import {
 	findRoute,
 	handleFaviconRequest,
 	logRequest,
 	processRoute,
 	sendNotFoundResponse,
-} from '@/utils/request.utils';
+} from '@/handlers/request.handler';
+import { IRoute } from '@/interfaces/route.interface';
+import { IServerConfig } from '@/interfaces/server-config.interface';
+import { Middleware, PyroRequest, PyroResponse } from '@/types';
 import chalk from 'chalk';
 import { Logger } from '../utils/logger';
 
