@@ -12,6 +12,7 @@ export const ROUTE_HANDLER_METADATA_KEY = Symbol('handler');
 
 // PARAMETER
 
+export const FUNCTION_PARAMETERS_METADATA_KEY = Symbol('parameters');
 export const BODY_METADATA_KEY = Symbol('body');
 export const PARAM_METADATA_KEY = Symbol('param');
 export const QUERY_METADATA_KEY = Symbol('query');
