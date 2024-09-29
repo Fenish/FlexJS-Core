@@ -4,7 +4,7 @@ import {
 	MIDDLEWARE_METADATA_KEY,
 	ROUTE_HANDLER_METADATA_KEY,
 	ROUTES_METADATA_KEY,
-} from '../symbols';
+} from '../../metadata-keys';
 
 export function Controller(path: string) {
 	return function (target: any) {

@@ -5,7 +5,7 @@ import {
 	MIDDLEWARE_METADATA_KEY,
 	ROUTE_PATH_METADATA_KEY,
 	STATUS_METADATA_KEY,
-} from '../symbols';
+} from '../../metadata-keys';
 
 function createMethodDecorator(method: string) {
 	return function (path: string) {

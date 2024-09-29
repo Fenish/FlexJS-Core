@@ -1,6 +1,6 @@
 import { Middleware } from '@/types';
 import 'reflect-metadata';
-import { MIDDLEWARE_METADATA_KEY } from '../symbols';
+import { MIDDLEWARE_METADATA_KEY } from '../../metadata-keys';
 
 export function UseMiddleware(...middlewares: Middleware[]) {
 	return function (

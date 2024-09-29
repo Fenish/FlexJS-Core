@@ -1,4 +1,4 @@
-import { STATUS_METADATA_KEY } from '../symbols';
+import { STATUS_METADATA_KEY } from '../../metadata-keys';
 
 export function ResponseStatus(status: number) {
 	return function (

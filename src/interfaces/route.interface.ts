@@ -4,7 +4,7 @@ import {
 	ROUTE_HANDLER_METADATA_KEY,
 	ROUTE_PATH_METADATA_KEY,
 	STATUS_METADATA_KEY,
-} from '@/decorators/symbols';
+} from '@/metadata-keys';
 import { Middleware, RouteHandler } from '@/types';
 
 export interface IRoute {

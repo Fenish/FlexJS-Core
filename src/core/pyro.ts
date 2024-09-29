@@ -1,13 +1,6 @@
 import * as http from 'http';
 import 'reflect-metadata';
 
-import {
-	CONTROLLER_NAME_METADATA_KEY,
-	METHOD_METADATA_KEY,
-	MIDDLEWARE_METADATA_KEY,
-	ROUTE_PATH_METADATA_KEY,
-	ROUTES_METADATA_KEY,
-} from '@/decorators/symbols';
 import { LogLevel } from '@/enums/loglevel.enum';
 import {
 	findRoute,
@@ -18,6 +11,13 @@ import {
 } from '@/handlers/request.handler';
 import { IRoute } from '@/interfaces/route.interface';
 import { IServerConfig } from '@/interfaces/server-config.interface';
+import {
+	CONTROLLER_NAME_METADATA_KEY,
+	METHOD_METADATA_KEY,
+	MIDDLEWARE_METADATA_KEY,
+	ROUTE_PATH_METADATA_KEY,
+	ROUTES_METADATA_KEY,
+} from '@/metadata-keys';
 import { Middleware, PyroRequest, PyroResponse } from '@/types';
 import chalk from 'chalk';
 import { Logger } from '../utils/logger';
