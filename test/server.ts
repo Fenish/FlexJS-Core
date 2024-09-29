@@ -1,9 +1,10 @@
+import { LogLevel } from '@/enums/loglevel.enum';
 import { PyroServer } from '../src/core/pyro';
 import { AuthenticationController } from './controllers/authentication.controller';
 
 const server = new PyroServer({
 	logger: {
-		level: 'debug',
+		level: LogLevel.debug,
 	},
 });
 

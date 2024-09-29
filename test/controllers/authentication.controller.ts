@@ -1,19 +1,30 @@
-import { Controller, Get, UseMiddleware } from '../../src/decorators';
-import { TestMiddleware } from '../middlewares/test';
+import { HttpStatus } from '@/enums/http.enum';
+import {
+	Body,
+	Controller,
+	Get,
+	Post,
+	ResponseStatus,
+	UseMiddleware,
+} from '../../src/decorators';
+import { GlobalMiddlewareTest } from '../middlewares/global.middleware';
+import { TestMiddleware } from '../middlewares/test.middleware';
 
 @Controller('/auth')
+@UseMiddleware(GlobalMiddlewareTest)
 export class AuthenticationController {
-	@Get('/login')
-	login() {
+	@Post('/login')
+	login(@Body('username') username: string, @Body() wholeBody: any) {
 		return {
-			message: 'login',
+			username: username,
+			...wholeBody,
 		};
 	}
 
 	@Get('/register')
-	// @ResponseStatus(201)
+	@ResponseStatus(HttpStatus.CREATED)
 	@UseMiddleware(TestMiddleware)
-	register(body: any) {
+	register() {
 		return { message: 'test' };
 	}
 }
