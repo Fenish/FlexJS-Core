@@ -18,6 +18,8 @@ import {
 	ROUTE_PATH_METADATA_KEY,
 	ROUTES_METADATA_KEY,
 } from '@/metadata-keys';
+import { bodyParser } from '@/parsers/body.parser';
+import { urlEncodedParser } from '@/parsers/urlencoded.parser';
 import { Middleware, PyroRequest, PyroResponse } from '@/types';
 import chalk from 'chalk';
 import { Logger } from '../utils/logger';
@@ -38,6 +40,8 @@ export class PyroServer {
 		Logger.info('Server initializing...');
 
 		this.server = http.createServer(this.handleRequest.bind(this));
+		this.use(bodyParser());
+		this.use(urlEncodedParser());
 	}
 
 	use(...middlewares: Middleware[]): this {
@@ -97,7 +101,9 @@ export class PyroServer {
 			await processRoute(req, res, route, this.globalMiddlewares);
 		}
 
-		logRequest(req, res, start);
+		res.on('finish', () => {
+			logRequest(req, res, start);
+		});
 	}
 
 	listen(port: number): http.Server {
