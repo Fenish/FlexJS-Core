@@ -1,6 +1,7 @@
 import { HttpMethods } from '@/enums/http.enum';
 import 'reflect-metadata';
 import {
+	FUNCTION_PARAMETERS_METADATA_KEY,
 	METHOD_METADATA_KEY,
 	MIDDLEWARE_METADATA_KEY,
 	ROUTE_PATH_METADATA_KEY,
@@ -50,6 +51,27 @@ function createMethodDecorator(method: string) {
 			Reflect.defineMetadata(
 				STATUS_METADATA_KEY,
 				existingStatusCode,
+				descriptor.value,
+				propertyKey
+			);
+
+			const metaKeys = Reflect.getMetadataKeys(target, propertyKey);
+			const parameters: any = [];
+			for (const key of metaKeys) {
+				const metaData = Reflect.getMetadata(key, target, propertyKey);
+				metaData.sort((a: any, b: any) => a.index - b.index);
+				for (const data of metaData) {
+					parameters.push({
+						type: key,
+						data,
+					});
+				}
+			}
+			console.log(parameters);
+
+			Reflect.defineMetadata(
+				FUNCTION_PARAMETERS_METADATA_KEY,
+				parameters,
 				descriptor.value,
 				propertyKey
 			);

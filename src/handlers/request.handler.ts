@@ -5,6 +5,7 @@ import {
 	ROUTE_PATH_METADATA_KEY,
 	STATUS_METADATA_KEY,
 } from '@/metadata-keys';
+import { parseParameters } from '@/parsers/paramater.parser';
 import { PyroRequest, PyroResponse } from '@/types';
 import * as zlib from 'zlib';
 import { Logger } from '../utils/logger';
@@ -58,12 +59,17 @@ export async function processRoute(
 
 		const runMiddleware = async () => {
 			if (index < middlewares.length) {
-				Logger.debug(`Running middleware: ${middlewares[index].name}`);
+				if (middlewares[index].name) {
+					Logger.debug(
+						`Running middleware: ${middlewares[index].name}`
+					);
+				}
 				await middlewares[index](req, res, async () => {
 					index++;
 					await runMiddleware();
 				});
 			} else {
+				await parseParameters(req, route);
 				await handleRouteHandler(req, res, route);
 			}
 		};
@@ -85,7 +91,7 @@ async function handleRouteHandler(
 	route: any
 ) {
 	Logger.debug(`Running handler: ${route[ROUTE_HANDLER_METADATA_KEY].name}`);
-	const data = await route[ROUTE_HANDLER_METADATA_KEY]();
+	const data = await route[ROUTE_HANDLER_METADATA_KEY](...route.parameters);
 
 	const acceptEncoding = req.headers['accept-encoding'] || '';
 	const responseData = JSON.stringify(data);
