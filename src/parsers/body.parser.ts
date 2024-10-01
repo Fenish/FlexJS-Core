@@ -1,4 +1,4 @@
-import { Middleware, NextFunction, FlexRequest, FlexResponse } from '@/types';
+import { Middleware, NextFunction, FlexRequest, FlexResponse } from '../types';
 
 export function bodyParser(): Middleware {
 	return (req: FlexRequest, res: FlexResponse, next: NextFunction) => {

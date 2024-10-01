@@ -1,4 +1,4 @@
-import { BODY_METADATA_KEY } from '@/metadata-keys';
+import { BODY_METADATA_KEY } from '../../metadata-keys';
 
 export function Body(key?: string) {
 	return function (

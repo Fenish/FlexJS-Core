@@ -1,4 +1,4 @@
-import { Middleware } from '@/types';
+import { Middleware } from '../../types';
 import 'reflect-metadata';
 import { MIDDLEWARE_METADATA_KEY } from '../../metadata-keys';
 

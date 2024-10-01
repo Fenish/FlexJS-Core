@@ -1,4 +1,4 @@
-import { HttpMethods } from '@/enums/http.enum';
+import { HttpMethods } from '../../enums/http.enum';
 import 'reflect-metadata';
 import {
 	FUNCTION_PARAMETERS_METADATA_KEY,

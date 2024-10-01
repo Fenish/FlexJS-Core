@@ -1,26 +1,26 @@
 import * as http from 'http';
 import 'reflect-metadata';
 
-import { LogLevel } from '@/enums/loglevel.enum';
+import { LogLevel } from '../enums/loglevel.enum';
 import {
 	findRoute,
 	handleFaviconRequest,
 	logRequest,
 	processRoute,
 	sendNotFoundResponse,
-} from '@/handlers/request.handler';
-import { IRoute } from '@/interfaces/route.interface';
-import { IServerConfig } from '@/interfaces/server-config.interface';
+} from '../handlers/request.handler';
+import { IRoute } from '../interfaces/route.interface';
+import { IServerConfig } from '../interfaces/server-config.interface';
 import {
 	CONTROLLER_NAME_METADATA_KEY,
 	METHOD_METADATA_KEY,
 	MIDDLEWARE_METADATA_KEY,
 	ROUTE_PATH_METADATA_KEY,
 	ROUTES_METADATA_KEY,
-} from '@/metadata-keys';
-import { bodyParser } from '@/parsers/body.parser';
-import { urlEncodedParser } from '@/parsers/urlencoded.parser';
-import { Middleware, FlexRequest, FlexResponse } from '@/types';
+} from '..//metadata-keys';
+import { bodyParser } from '..//parsers/body.parser';
+import { urlEncodedParser } from '..//parsers/urlencoded.parser';
+import { Middleware, FlexRequest, FlexResponse } from '..//types';
 import chalk from 'chalk';
 import { Logger } from '../utils/logger';
 

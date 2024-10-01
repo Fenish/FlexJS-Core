@@ -1,4 +1,4 @@
-import { LogLevel } from '@/enums/loglevel.enum';
+import { LogLevel } from '../enums/loglevel.enum';
 
 export interface IServerConfig {
 	logger: {

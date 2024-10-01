@@ -1,5 +1,5 @@
-import { LogLevel } from '@/enums/loglevel.enum';
-import { IServerConfig } from '@/interfaces/server-config.interface';
+import { LogLevel } from '../enums/loglevel.enum';
+import { IServerConfig } from '../interfaces/server-config.interface';
 import chalk from 'chalk';
 import { FlexServer } from '../core/flex';
 

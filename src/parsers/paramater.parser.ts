@@ -1,9 +1,9 @@
 import {
 	BODY_METADATA_KEY,
 	FUNCTION_PARAMETERS_METADATA_KEY,
-} from '@/metadata-keys';
-import { FlexRequest } from '@/types';
-import { Logger } from '@/utils/logger';
+} from '../metadata-keys';
+import { FlexRequest } from '../types';
+import { Logger } from '../utils/logger';
 
 export async function parseParameters(req: FlexRequest, route: any) {
 	Logger.debug('Parsing Parameters');

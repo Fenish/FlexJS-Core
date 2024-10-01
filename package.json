@@ -1,9 +1,10 @@
 {
-	"name": "flexjs-core",
+	"name": "@flex/core",
 	"version": "0.0.1",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"scripts": {
-		"test": "tsx watch test/server.ts"
+		"test": "tsx watch test/server.ts",
+		"build": "tsc"
 	},
 	"keywords": [],
 	"author": "",

@@ -5,8 +5,8 @@ import {
 	ROUTE_HANDLER_METADATA_KEY,
 	ROUTE_PATH_METADATA_KEY,
 	STATUS_METADATA_KEY,
-} from '@/metadata-keys';
-import { Middleware, RouteHandler } from '@/types';
+} from '../metadata-keys';
+import { Middleware, RouteHandler } from '../types';
 
 export interface IRoute {
 	[ROUTE_PATH_METADATA_KEY]: string;

@@ -4,9 +4,9 @@ import {
 	ROUTE_HANDLER_METADATA_KEY,
 	ROUTE_PATH_METADATA_KEY,
 	STATUS_METADATA_KEY,
-} from '@/metadata-keys';
-import { parseParameters } from '@/parsers/paramater.parser';
-import { FlexRequest, FlexResponse } from '@/types';
+} from '../metadata-keys';
+import { parseParameters } from '../parsers/paramater.parser';
+import { FlexRequest, FlexResponse } from '../types';
 import * as zlib from 'zlib';
 import { Logger } from '../utils/logger';
 
