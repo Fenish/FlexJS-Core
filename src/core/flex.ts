@@ -20,11 +20,11 @@ import {
 } from '@/metadata-keys';
 import { bodyParser } from '@/parsers/body.parser';
 import { urlEncodedParser } from '@/parsers/urlencoded.parser';
-import { Middleware, PyroRequest, PyroResponse } from '@/types';
+import { Middleware, FlexRequest, FlexResponse } from '@/types';
 import chalk from 'chalk';
 import { Logger } from '../utils/logger';
 
-export class PyroServer {
+export class FlexServer {
 	private routes: IRoute[] = [];
 	private server: http.Server;
 	private controllers: any[] = [];
@@ -88,7 +88,7 @@ export class PyroServer {
 		}
 	}
 
-	private async handleRequest(req: PyroRequest, res: PyroResponse) {
+	private async handleRequest(req: FlexRequest, res: FlexResponse) {
 		const start = Date.now();
 
 		if (handleFaviconRequest(req, res)) return;
@@ -124,7 +124,7 @@ function getStartupMessage(
 	routes: any,
 	logLevel: LogLevel | undefined
 ) {
-	console.log(chalk.hex('#FFA500')('🔥 PyroJS'));
+	console.log(chalk.hex('#FFA500')('🔥 FlexJS'));
 	infoMsg(`Server running on port: ${chalk.green(port)}`);
 	infoMsg('Registered routes: ' + chalk.green(routes.length));
 	infoMsg('Logging level: ' + chalk.green(logLevel || 'info'));

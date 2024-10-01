@@ -1,7 +1,7 @@
-import { Middleware, NextFunction, PyroRequest, PyroResponse } from '@/types';
+import { Middleware, NextFunction, FlexRequest, FlexResponse } from '@/types';
 
 export function urlEncodedParser(): Middleware {
-	return (req: PyroRequest, res: PyroResponse, next: NextFunction) => {
+	return (req: FlexRequest, res: FlexResponse, next: NextFunction) => {
 		if (req.method === 'GET') return next();
 		if (!req.headers['content-type']) return next();
 		if (

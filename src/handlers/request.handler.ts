@@ -6,14 +6,14 @@ import {
 	STATUS_METADATA_KEY,
 } from '@/metadata-keys';
 import { parseParameters } from '@/parsers/paramater.parser';
-import { PyroRequest, PyroResponse } from '@/types';
+import { FlexRequest, FlexResponse } from '@/types';
 import * as zlib from 'zlib';
 import { Logger } from '../utils/logger';
 
 // Function to handle favicon requests
 export function handleFaviconRequest(
-	req: PyroRequest,
-	res: PyroResponse
+	req: FlexRequest,
+	res: FlexResponse
 ): boolean {
 	if (req.url === '/favicon.ico') {
 		res.writeHead(204); // No Content
@@ -24,7 +24,7 @@ export function handleFaviconRequest(
 }
 
 // Function to parse URL and find the route
-export function findRoute(routes: any[], req: PyroRequest): any {
+export function findRoute(routes: any[], req: FlexRequest): any {
 	const url = new URL(req.url || '/', `http://${req.headers.host}`);
 	return routes.find(
 		(r: any) =>
@@ -34,15 +34,15 @@ export function findRoute(routes: any[], req: PyroRequest): any {
 }
 
 // Function to send a 404 response
-export function sendNotFoundResponse(res: PyroResponse): void {
+export function sendNotFoundResponse(res: FlexResponse): void {
 	res.writeHead(404, { 'Content-Type': 'application/json' });
 	res.end(JSON.stringify({ error: 'Route not found' }));
 }
 
 // Function to process middlewares and handler for a given route
 export async function processRoute(
-	req: PyroRequest,
-	res: PyroResponse,
+	req: FlexRequest,
+	res: FlexResponse,
 	route: any,
 	globalMiddlewares: any[]
 ) {
@@ -86,8 +86,8 @@ export async function processRoute(
 
 // Function to run the route handler and send a response
 async function handleRouteHandler(
-	req: PyroRequest,
-	res: PyroResponse,
+	req: FlexRequest,
+	res: FlexResponse,
 	route: any
 ) {
 	Logger.debug(`Running handler: ${route[ROUTE_HANDLER_METADATA_KEY].name}`);
@@ -105,7 +105,7 @@ async function handleRouteHandler(
 }
 
 function sendCompressedResponse(
-	res: PyroResponse,
+	res: FlexResponse,
 	route: any,
 	responseData: string
 ) {
@@ -120,7 +120,7 @@ function sendCompressedResponse(
 	res.end(compressedData);
 }
 
-function sendJsonResponse(res: PyroResponse, route: any, responseData: string) {
+function sendJsonResponse(res: FlexResponse, route: any, responseData: string) {
 	res.writeHead(route[STATUS_METADATA_KEY], {
 		'Content-Type': 'application/json',
 	});
@@ -130,8 +130,8 @@ function sendJsonResponse(res: PyroResponse, route: any, responseData: string) {
 
 // Function to log the request details after processing
 export function logRequest(
-	req: PyroRequest,
-	res: PyroResponse,
+	req: FlexRequest,
+	res: FlexResponse,
 	start: number
 ): void {
 	const responseTime = Date.now() - start;

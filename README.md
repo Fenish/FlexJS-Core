@@ -1,6 +1,6 @@
-# PyroJS
+# FlexJS
 
-Welcome to **PyroJS**! A modern JavaScript framework designed to provide a simple and intuitive development experience without the complexity of modular structures. Built with TypeScript, PyroJS offers a decorator-based syntax, ensuring type safety while maintaining independence from Express.
+Welcome to **FlexJS**! A modern JavaScript framework designed to provide a simple and intuitive development experience without the complexity of modular structures. Built with TypeScript, FlexJS offers a decorator-based syntax, ensuring type safety while maintaining independence from Express.
 
 ## Features
 

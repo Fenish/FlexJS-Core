@@ -2,10 +2,10 @@ import {
 	BODY_METADATA_KEY,
 	FUNCTION_PARAMETERS_METADATA_KEY,
 } from '@/metadata-keys';
-import { PyroRequest } from '@/types';
+import { FlexRequest } from '@/types';
 import { Logger } from '@/utils/logger';
 
-export async function parseParameters(req: PyroRequest, route: any) {
+export async function parseParameters(req: FlexRequest, route: any) {
 	Logger.debug('Parsing Parameters');
 	const parameters = route[FUNCTION_PARAMETERS_METADATA_KEY];
 
@@ -21,7 +21,7 @@ export async function parseParameters(req: PyroRequest, route: any) {
 	route.parameters = orderedParams;
 }
 
-function parseBody(req: PyroRequest, data: any) {
+function parseBody(req: FlexRequest, data: any) {
 	const body = req.body;
 	if (data.key) {
 		return body[data.key];

@@ -1,18 +1,18 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-export interface PyroRequest extends IncomingMessage {
+export interface FlexRequest extends IncomingMessage {
 	body?: any;
 }
-export type PyroResponse = ServerResponse;
+export type FlexResponse = ServerResponse;
 export type NextFunction = () => void;
 
 export type RouteHandler = (
-	req: PyroRequest,
-	res: PyroResponse
+	req: FlexRequest,
+	res: FlexResponse
 ) => Promise<void> | void;
 
 export type Middleware = (
-	req: PyroRequest,
-	res: PyroResponse,
+	req: FlexRequest,
+	res: FlexResponse,
 	next: () => void
 ) => void;

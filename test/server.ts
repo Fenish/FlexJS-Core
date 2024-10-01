@@ -1,8 +1,8 @@
 import { LogLevel } from '@/enums/loglevel.enum';
-import { PyroServer } from '../src/core/pyro';
+import { FlexServer } from '../src/core/flex';
 import { AuthenticationController } from './controllers/authentication.controller';
 
-const server = new PyroServer({
+const server = new FlexServer({
 	logger: {
 		level: LogLevel.debug,
 	},

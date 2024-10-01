@@ -1,7 +1,7 @@
 import { LogLevel } from '@/enums/loglevel.enum';
 import { IServerConfig } from '@/interfaces/server-config.interface';
 import chalk from 'chalk';
-import { PyroServer } from '../core/pyro';
+import { FlexServer } from '../core/flex';
 
 function printToConsole(type: string, message: string) {
 	let prefixColor = chalk.green;
@@ -29,7 +29,7 @@ export class Logger {
 	private static instance: Logger | null = null; // Static instance
 	private loggerConfig: IServerConfig['logger'] | undefined;
 
-	private constructor(app: PyroServer) {
+	private constructor(app: FlexServer) {
 		this.loggerConfig = app.config?.logger;
 	}
 
@@ -56,7 +56,7 @@ export class Logger {
 		return true;
 	}
 
-	public static initialize(app: PyroServer) {
+	public static initialize(app: FlexServer) {
 		if (!Logger.instance) {
 			Logger.instance = new Logger(app);
 		}

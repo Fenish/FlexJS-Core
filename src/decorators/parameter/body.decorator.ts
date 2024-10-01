@@ -18,3 +18,8 @@ export function Body(key?: string) {
 		);
 	};
 }
+
+// TODO: MAKE IT FUTURE PROPER
+// For example. handle everything inside here
+// It has to be static function to be able to be called in route handler
+// For example class.callback
