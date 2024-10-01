@@ -124,7 +124,7 @@ function getStartupMessage(
 	routes: any,
 	logLevel: LogLevel | undefined
 ) {
-	console.log(chalk.hex('#FFA500')('🔥 FlexJS'));
+	console.log(chalk.yellow('FlexJS'));
 	infoMsg(`Server running on port: ${chalk.green(port)}`);
 	infoMsg('Registered routes: ' + chalk.green(routes.length));
 	infoMsg('Logging level: ' + chalk.green(logLevel || 'info'));
