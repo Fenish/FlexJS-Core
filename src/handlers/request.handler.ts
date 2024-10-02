@@ -1,3 +1,4 @@
+import * as zlib from 'zlib';
 import {
 	METHOD_METADATA_KEY,
 	MIDDLEWARE_METADATA_KEY,
@@ -7,7 +8,6 @@ import {
 } from '../metadata-keys';
 import { parseParameters } from '../parsers/paramater.parser';
 import { FlexRequest, FlexResponse } from '../types';
-import * as zlib from 'zlib';
 import { Logger } from '../utils/logger';
 
 // Function to handle favicon requests
@@ -69,7 +69,7 @@ export async function processRoute(
 					await runMiddleware();
 				});
 			} else {
-				await parseParameters(req, route);
+				await parseParameters(req, res, route);
 				await handleRouteHandler(req, res, route);
 			}
 		};
@@ -96,6 +96,11 @@ async function handleRouteHandler(
 	const acceptEncoding = req.headers['accept-encoding'] || '';
 	const responseData = JSON.stringify(data);
 	const shouldCompress = responseData.length > 1024;
+
+	if (res.writableEnded) {
+		Logger.debug('Route handler already ended response');
+		return;
+	}
 
 	if (acceptEncoding.includes('gzip') && shouldCompress) {
 		sendCompressedResponse(res, route, responseData);
@@ -134,6 +139,6 @@ export function logRequest(
 	res: FlexResponse,
 	start: number
 ): void {
-	const responseTime = Date.now() - start;
+	const responseTime = Math.floor(performance.now() - start);
 	Logger.http(req.method, res.statusCode, req.url, responseTime);
 }

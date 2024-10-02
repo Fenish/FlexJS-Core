@@ -1,4 +1,6 @@
-import { BODY_METADATA_KEY } from '../../metadata-keys';
+import { BODY_METADATA_KEY } from '@/metadata-keys';
+import { FlexRequest } from '@/types';
+import { createParameterContext } from '../parameter.registerer';
 
 export function Body(key?: string) {
 	return function (
@@ -6,20 +8,21 @@ export function Body(key?: string) {
 		propertyKey: string | symbol,
 		parameterIndex: number
 	) {
-		const existingBodyParams: { index: number; key?: string }[] =
-			Reflect.getMetadata(BODY_METADATA_KEY, target, propertyKey) || [];
-		existingBodyParams.push({ index: parameterIndex, key });
-
-		Reflect.defineMetadata(
-			BODY_METADATA_KEY,
-			existingBodyParams,
-			target,
-			propertyKey
-		);
+		const data = {
+			index: parameterIndex,
+			key: key,
+			callback: callBack,
+		};
+		createParameterContext(BODY_METADATA_KEY, data, target, propertyKey);
 	};
-}
 
-// TODO: MAKE IT FUTURE PROPER
-// For example. handle everything inside here
-// It has to be static function to be able to be called in route handler
-// For example class.callback
+	function callBack(req: FlexRequest) {
+		const body = req.body;
+
+		if (key) {
+			return body[key];
+		} else {
+			return body;
+		}
+	}
+}
