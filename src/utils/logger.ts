@@ -1,27 +1,43 @@
+import { FlexServer } from '../core/flex';
 import { LogLevel } from '../enums/loglevel.enum';
 import { IServerConfig } from '../interfaces/server-config.interface';
-import chalk from 'chalk';
-import { FlexServer } from '../core/flex';
+
+const COLORS = {
+	green: '\x1b[32m',
+	gray: '\x1b[90m',
+	blue: '\x1b[34m',
+	yellow: '\x1b[33m',
+	red: '\x1b[31m',
+	magenta: '\x1b[35m',
+	cyan: '\x1b[36m',
+	reset: '\x1b[0m',
+	bgCyan: '\x1b[46m',
+	bgMagenta: '\x1b[45m',
+	bgYellow: '\x1b[43m',
+	bgBlue: '\x1b[44m',
+	bgRed: '\x1b[41m',
+	bgGreen: '\x1b[42m',
+};
 
 function printToConsole(type: string, message: string) {
-	let prefixColor = chalk.green;
-	let messageColor = chalk.gray;
+	let prefixColor = COLORS.green;
+	let messageColor = COLORS.gray;
 
 	if (type === 'INFO') {
-		prefixColor = chalk.blueBright;
+		prefixColor = COLORS.blue;
 	} else if (type === 'WARN') {
-		prefixColor = chalk.yellow;
+		prefixColor = COLORS.yellow;
 	} else if (type === 'ERROR') {
-		prefixColor = chalk.red;
+		prefixColor = COLORS.red;
 	} else if (type === 'DEBUG') {
-		prefixColor = chalk.magenta;
-		messageColor = chalk.greenBright;
+		prefixColor = COLORS.magenta;
+		messageColor = COLORS.green;
 	}
 
-	const time = chalk.gray(`[${new Date().toLocaleString()}]`);
+	const time = `${COLORS.gray}[${new Date().toLocaleString()}]${COLORS.reset}`;
+	const prefix = `${prefixColor}[${type}]${COLORS.reset}`;
+	const msg = `${messageColor}${message}${COLORS.reset}`;
 
-	const prefix = prefixColor(`[${type}]`);
-	const msg = messageColor(message);
 	console.log(`${time} ${prefix} ${msg}`);
 }
 
@@ -93,33 +109,33 @@ export class Logger {
 		time_in_ms: number
 	) {
 		if (method === 'GET') {
-			method = chalk.bgCyanBright(' GET ');
+			method = `${COLORS.bgCyan} GET ${COLORS.reset}`;
 		}
 
 		if (method === 'POST') {
-			method = chalk.bgMagentaBright(' POST ');
+			method = `${COLORS.bgMagenta} POST ${COLORS.reset}`;
 		}
 
 		if (method === 'PUT') {
-			method = chalk.bgYellowBright(' PUT ');
+			method = `${COLORS.bgYellow} PUT ${COLORS.reset}`;
 		}
 
 		if (method === 'PATCH') {
-			method = chalk.bgBlueBright(' PATCH ');
+			method = `${COLORS.bgBlue} PATCH ${COLORS.reset}`;
 		}
 
 		if (method === 'DELETE') {
-			method = chalk.bgRedBright(' DELETE ');
+			method = `${COLORS.bgRed} DELETE ${COLORS.reset}`;
 		}
 
 		if (status >= 200 && status < 300) {
-			status = chalk.bgGreenBright(` ${status} `);
+			status = `${COLORS.bgGreen} ${status} ${COLORS.reset}`;
 		} else if (status >= 400) {
-			status = chalk.bgRedBright(` ${status} `);
+			status = `${COLORS.bgRed} ${status} ${COLORS.reset}`;
 		}
-		const eventTime = chalk.gray(`[${new Date().toLocaleString()}]`);
 
-		const time = chalk.yellowBright(`${time_in_ms}ms`);
+		const eventTime = `${COLORS.gray}[${new Date().toLocaleString()}]${COLORS.reset}`;
+		const time = `${COLORS.yellow}${time_in_ms}ms${COLORS.reset}`;
 		const msg = `${eventTime} ${method} ${status} ${path} ${time}`;
 
 		if (this.instance?.checkLogLevel(this.instance, LogLevel.http)) {

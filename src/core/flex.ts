@@ -1,6 +1,16 @@
 import * as http from 'http';
 import 'reflect-metadata';
 
+import {
+	CONTROLLER_NAME_METADATA_KEY,
+	METHOD_METADATA_KEY,
+	MIDDLEWARE_METADATA_KEY,
+	ROUTE_PATH_METADATA_KEY,
+	ROUTES_METADATA_KEY,
+} from '..//metadata-keys';
+import { bodyParser } from '..//parsers/body.parser';
+import { urlEncodedParser } from '..//parsers/urlencoded.parser';
+import { FlexRequest, FlexResponse, Middleware } from '..//types';
 import { LogLevel } from '../enums/loglevel.enum';
 import {
 	findRoute,
@@ -11,17 +21,6 @@ import {
 } from '../handlers/request.handler';
 import { IRoute } from '../interfaces/route.interface';
 import { IServerConfig } from '../interfaces/server-config.interface';
-import {
-	CONTROLLER_NAME_METADATA_KEY,
-	METHOD_METADATA_KEY,
-	MIDDLEWARE_METADATA_KEY,
-	ROUTE_PATH_METADATA_KEY,
-	ROUTES_METADATA_KEY,
-} from '..//metadata-keys';
-import { bodyParser } from '..//parsers/body.parser';
-import { urlEncodedParser } from '..//parsers/urlencoded.parser';
-import { Middleware, FlexRequest, FlexResponse } from '..//types';
-import chalk from 'chalk';
 import { Logger } from '../utils/logger';
 
 export class FlexServer {
@@ -89,7 +88,7 @@ export class FlexServer {
 	}
 
 	private async handleRequest(req: FlexRequest, res: FlexResponse) {
-		const start = Date.now();
+		const start = performance.now();
 
 		if (handleFaviconRequest(req, res)) return;
 
@@ -115,7 +114,7 @@ export class FlexServer {
 }
 
 function infoMsg(msg: string) {
-	const prefix = chalk.green('*');
+	const prefix = '\x1b[32m*\x1b[0m'; // Green asterisk with reset
 	console.log(`${prefix} ${msg}`);
 }
 
@@ -124,9 +123,9 @@ function getStartupMessage(
 	routes: any,
 	logLevel: LogLevel | undefined
 ) {
-	console.log(chalk.yellow('FlexJS'));
-	infoMsg(`Server running on port: ${chalk.green(port)}`);
-	infoMsg('Registered routes: ' + chalk.green(routes.length));
-	infoMsg('Logging level: ' + chalk.green(logLevel || 'info'));
-	infoMsg(`Press ${chalk.red('CTRL+C')} to stop server\n`);
+	console.log('\x1b[33mFlexJS\x1b[0m'); // Yellow text with reset
+	infoMsg(`Server running on port: \x1b[32m${port}\x1b[0m`); // Green port number with reset
+	infoMsg('Registered routes: ' + `\x1b[32m${routes.length}\x1b[0m`); // Green route count with reset
+	infoMsg('Logging level: ' + `\x1b[32m${logLevel || 'info'}\x1b[0m`); // Green log level with reset
+	infoMsg(`Press \x1b[31mCTRL+C\x1b[0m to stop server\n`); // Red CTRL+C with reset
 }
