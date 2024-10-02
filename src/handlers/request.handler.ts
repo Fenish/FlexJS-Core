@@ -6,7 +6,7 @@ import {
 	ROUTE_PATH_METADATA_KEY,
 	STATUS_METADATA_KEY,
 } from '../metadata-keys';
-import { parseParameters } from '../parsers/paramater.parser';
+import { parseParameters } from '../parsers/parameter.parser';
 import { FlexRequest, FlexResponse } from '../types';
 import { Logger } from '../utils/logger';
 
@@ -93,14 +93,14 @@ async function handleRouteHandler(
 	Logger.debug(`Running handler: ${route[ROUTE_HANDLER_METADATA_KEY].name}`);
 	const data = await route[ROUTE_HANDLER_METADATA_KEY](...route.parameters);
 
-	const acceptEncoding = req.headers['accept-encoding'] || '';
-	const responseData = JSON.stringify(data);
-	const shouldCompress = responseData.length > 1024;
-
 	if (res.writableEnded) {
 		Logger.debug('Route handler already ended response');
 		return;
 	}
+
+	const acceptEncoding = req.headers['accept-encoding'] || '';
+	const responseData = JSON.stringify(data);
+	const shouldCompress = responseData.length > 1024;
 
 	if (acceptEncoding.includes('gzip') && shouldCompress) {
 		sendCompressedResponse(res, route, responseData);
