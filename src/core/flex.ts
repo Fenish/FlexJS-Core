@@ -1,6 +1,7 @@
 import * as http from 'http';
 import 'reflect-metadata';
 
+import { queryParser } from '@/parsers/query.parser';
 import {
 	CONTROLLER_NAME_METADATA_KEY,
 	METHOD_METADATA_KEY,
@@ -39,6 +40,9 @@ export class FlexServer {
 		Logger.info('Server initializing...');
 
 		this.server = http.createServer(this.handleRequest.bind(this));
+
+		// Must have middlewares
+		this.use(queryParser());
 		this.use(bodyParser());
 		this.use(urlEncodedParser());
 	}
