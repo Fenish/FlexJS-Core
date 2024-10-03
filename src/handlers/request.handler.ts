@@ -23,14 +23,39 @@ export function handleFaviconRequest(
 	return false;
 }
 
+function matchUrlPattern(url: string, pattern: string) {
+	const parsedUrl = new URL(url);
+	const regexPattern = pattern.replace(/:([^/]+)/g, '(?<$1>[^/]+)');
+	const regex = new RegExp(`^${regexPattern}$`);
+	const match = parsedUrl.pathname.match(regex);
+
+	if (match && match.groups) {
+		return Object.assign({}, match.groups);
+	} else {
+		return null;
+	}
+}
+
 // Function to parse URL and find the route
 export function findRoute(routes: any[], req: FlexRequest): any {
 	const url = new URL(req.url || '/', `http://${req.headers.host}`);
-	return routes.find(
-		(r: any) =>
-			r[METHOD_METADATA_KEY] === req.method &&
-			r[ROUTE_PATH_METADATA_KEY] === url.pathname
-	);
+
+	return routes.find((r: any) => {
+		if (r[METHOD_METADATA_KEY] !== req.method) return false;
+		const routePattern = new RegExp(
+			`^${r[ROUTE_PATH_METADATA_KEY].replace(/:[^/]+/g, '([^/]+)')}$`
+		);
+
+		const urlParams = matchUrlPattern(
+			url.toString(),
+			r[ROUTE_PATH_METADATA_KEY]
+		);
+		if (urlParams) {
+			req.params = urlParams;
+		}
+
+		return routePattern.test(url.pathname);
+	});
 }
 
 // Function to send a 404 response
