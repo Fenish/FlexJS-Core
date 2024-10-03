@@ -6,5 +6,7 @@ export * from './http/methods.decorator';
 export * from './http/responsestatus.decorator';
 
 export * from './parameter/body.decorator';
+export * from './parameter/param.decorator';
+export * from './parameter/query.decorator';
 export * from './parameter/request.decorator';
 export * from './parameter/response.decorator';
