@@ -8,12 +8,14 @@ export function Body(key?: string) {
 		propertyKey: string | symbol,
 		parameterIndex: number
 	) {
-		const data = {
-			index: parameterIndex,
-			key: key,
-			callback: callBack,
-		};
-		createParameterContext(BODY_METADATA_KEY, data, target, propertyKey);
+		createParameterContext(
+			BODY_METADATA_KEY,
+			target,
+			propertyKey,
+			parameterIndex,
+			key,
+			callBack
+		);
 	};
 
 	function callBack(req: FlexRequest) {

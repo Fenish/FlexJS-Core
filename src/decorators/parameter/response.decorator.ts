@@ -1,4 +1,4 @@
-import { REQUEST_METADATA_KEY } from '@/metadata-keys';
+import { RESPONSE_METADATA_KEY } from '@/metadata-keys';
 import { FlexRequest, FlexResponse } from '@/types';
 import { createParameterContext } from '../parameter.registerer';
 
@@ -8,11 +8,14 @@ export function Response() {
 		propertyKey: string | symbol,
 		parameterIndex: number
 	) {
-		const data = {
-			index: parameterIndex,
-			callback: callBack,
-		};
-		createParameterContext(REQUEST_METADATA_KEY, data, target, propertyKey);
+		createParameterContext(
+			RESPONSE_METADATA_KEY,
+			target,
+			propertyKey,
+			parameterIndex,
+			undefined,
+			callBack
+		);
 	};
 
 	function callBack(req: FlexRequest, res: FlexResponse) {

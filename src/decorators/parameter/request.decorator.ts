@@ -8,11 +8,14 @@ export function Request() {
 		propertyKey: string | symbol,
 		parameterIndex: number
 	) {
-		const data = {
-			index: parameterIndex,
-			callback: callBack,
-		};
-		createParameterContext(REQUEST_METADATA_KEY, data, target, propertyKey);
+		createParameterContext(
+			REQUEST_METADATA_KEY,
+			target,
+			propertyKey,
+			parameterIndex,
+			undefined,
+			callBack
+		);
 	};
 
 	function callBack(req: FlexRequest) {
